@@ -1,1 +1,8 @@
-spring.application.name=orders-service
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: secret
+    username: myuser
+    url: jdbc:postgresql://localhost/mydatabase
+  application:
+    name: orders-service
