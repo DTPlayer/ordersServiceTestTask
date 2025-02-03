@@ -6,3 +6,6 @@ spring:
     url: jdbc:postgresql://localhost/mydatabase
   application:
     name: orders-service
+
+generate:
+  endpoint: http://213.171.28.72:8080/numbers/generate
