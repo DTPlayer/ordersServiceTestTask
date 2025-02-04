@@ -1,6 +1,7 @@
 package io.refactor.ordersservice.models.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.Data;
 public class CreateOrderRequest {
     @NotNull(message = "Details must not be null")
     @Schema(description = "Array of order details", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Valid
     private CreateOrderDetails[] details;
 
     @Schema(description = "Recipient's name", example = "Иванов Иван Иванович", requiredMode = Schema.RequiredMode.REQUIRED)

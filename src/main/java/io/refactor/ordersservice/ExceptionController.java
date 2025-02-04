@@ -1,7 +1,8 @@
 package io.refactor.ordersservice;
 
+import io.refactor.ordersservice.models.response.ExceptionResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,13 +15,14 @@ import java.util.Map;
 public class ExceptionController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ExceptionResponse handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletResponse response) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        response.setStatus(422);
+        return new ExceptionResponse(errors, "Validation error", 422);
     }
 }

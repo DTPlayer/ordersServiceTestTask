@@ -20,8 +20,7 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public BaseResponse createOrder(@Valid @RequestBody CreateOrderRequest createOrderRequest) {
-        System.out.println("Валидация пройдена: " + createOrderRequest.toString());
+    public BaseResponse createOrder(@RequestBody @Valid CreateOrderRequest createOrderRequest) {
         return new BaseResponse();
     }
 }
