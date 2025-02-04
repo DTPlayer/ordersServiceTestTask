@@ -1,7 +1,9 @@
 package io.refactor.ordersservice;
 
 import io.refactor.ordersservice.models.response.ExceptionResponse;
+import io.refactor.ordersservice.models.response.OrderResponse;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,5 +26,16 @@ public class ExceptionController {
         });
         response.setStatus(422);
         return new ExceptionResponse(errors, "Validation error", 422);
+    }
+
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public OrderResponse handleEmptyResultDataAccessException(HttpServletResponse response) {
+        response.setStatus(404);
+
+        return new OrderResponse(
+                null,
+                "Order not found",
+                404
+        );
     }
 }

@@ -13,12 +13,15 @@ public class CreateOrderDetails {
     @NotNull(message = "Article id must not be null")
     @Schema(description = "Article id", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long articleId;
+
     @NotNull(message = "Product name must not be null")
     @Schema(description = "Product name", example = "Product 1", requiredMode = Schema.RequiredMode.REQUIRED)
     private String productName;
+
     @NotNull(message = "Quantity must not be null")
     @Schema(description = "Quantity", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer quantity;
+
     @NotNull(message = "Amount per item must not be null")
     @Schema(description = "Amount per item", example = "100", requiredMode = Schema.RequiredMode.REQUIRED)
     private BigDecimal amountPerItem;

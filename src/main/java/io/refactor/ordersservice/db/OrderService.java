@@ -1,5 +1,9 @@
 package io.refactor.ordersservice.db;
 
+import io.refactor.ordersservice.db.mappers.OrderDetailsRowMapper;
+import io.refactor.ordersservice.db.mappers.OrderRowMapper;
+import io.refactor.ordersservice.db.models.OrderDetailModel;
+import io.refactor.ordersservice.db.models.OrderModel;
 import io.refactor.ordersservice.models.request.CreateOrderDetails;
 import io.refactor.ordersservice.models.request.CreateOrderRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -61,5 +65,18 @@ public class OrderService {
                     keyHolder.getKeyList().getFirst().get("id")
             );
         }
+    }
+
+    public OrderModel getOrder(Long orderId) {
+        String sqlOrder = "SELECT * FROM public.\"order\" WHERE order_id=?";
+        String sqlOrderDetails = "SELECT * FROM public.\"order_detail\" WHERE order_id=?";
+
+        OrderModel order = jdbcTemplate.queryForObject(sqlOrder, new OrderRowMapper(), orderId);
+        assert order != null;
+        List<OrderDetailModel> orderDetails = jdbcTemplate.query(sqlOrderDetails, new OrderDetailsRowMapper(), order.getId());
+
+        order.setDetails(orderDetails);
+
+        return order;
     }
 }
