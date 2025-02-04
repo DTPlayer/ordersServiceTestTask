@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 public class CreateOrderDetails {
@@ -19,5 +21,5 @@ public class CreateOrderDetails {
     private Integer quantity;
     @NotNull(message = "Amount per item must not be null")
     @Schema(description = "Amount per item", example = "100", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Integer amountPerItem;
+    private BigDecimal amountPerItem;
 }
