@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,5 +38,13 @@ public class ExceptionController {
                 "Order not found",
                 404
         );
+    }
+
+    @ExceptionHandler(ParseException.class)
+    public ExceptionResponse handleParseException(ParseException ex, HttpServletResponse response) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", ex.getMessage());
+        response.setStatus(422);
+        return new ExceptionResponse(errors, "Validation error", 422);
     }
 }

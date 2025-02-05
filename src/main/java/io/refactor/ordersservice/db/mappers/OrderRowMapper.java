@@ -10,10 +10,6 @@ public final class OrderRowMapper implements RowMapper<OrderModel> {
 
     @Override
     public OrderModel mapRow(ResultSet rs, int rowNum) throws SQLException {
-        if (rs.getFetchSize() > 0) {
-            return null;
-        }
-
         return new OrderModel(
             rs.getLong("id"),
             rs.getLong("order_id"),

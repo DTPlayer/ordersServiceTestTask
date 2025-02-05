@@ -9,3 +9,7 @@ spring:
 
 generate:
   endpoint: http://213.171.28.72:8080/numbers/generate
+
+logging:
+  level:
+    sql: debug

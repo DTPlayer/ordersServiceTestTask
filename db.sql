@@ -4,7 +4,7 @@ create table "order"
         primary key,
     order_id         bigint                   not null,
     total_amount     decimal                  not null,
-    date_order       timestamp with time zone not null,
+    date_order       timestamp with time zone not null default now(),
     recipient        varchar(255)             not null,
     address_delivery varchar(255)             not null,
     payment_type     varchar(255)             not null,
