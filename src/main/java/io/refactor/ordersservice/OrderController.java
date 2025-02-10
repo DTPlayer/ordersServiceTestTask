@@ -43,7 +43,12 @@ public class OrderController {
             return new BaseResponse("Unable to generate order code", 400);
         }
 
-        orderService.createOrder(createOrderRequest, orderId.get());
+        boolean created = orderService.createOrder(createOrderRequest, orderId.get());
+
+        if (!created) {
+            response.setStatus(400);
+            return new BaseResponse("Unable to create order", 400);
+        }
 
         return new BaseResponse();
     }

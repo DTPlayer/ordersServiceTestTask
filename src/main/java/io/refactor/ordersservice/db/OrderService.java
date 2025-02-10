@@ -6,7 +6,10 @@ import io.refactor.ordersservice.db.models.OrderDetailModel;
 import io.refactor.ordersservice.db.models.OrderModel;
 import io.refactor.ordersservice.models.request.CreateOrderDetails;
 import io.refactor.ordersservice.models.request.CreateOrderRequest;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
@@ -31,44 +34,53 @@ public class OrderService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createOrder(CreateOrderRequest createOrderRequest, Long orderId) {
+    public boolean createOrder(@Valid CreateOrderRequest createOrderRequest, Long orderId) {
+        try {
+            if (createOrderRequest == null) {
+                return false;
+            }
 
-        double totalAmount = 0d;
+            double totalAmount = 0d;
+            for (CreateOrderDetails details : createOrderRequest.getDetails()) {
+                totalAmount += details.getAmountPerItem().doubleValue() * details.getQuantity();
+            }
 
-        for (CreateOrderDetails details : createOrderRequest.getDetails()) {
-            totalAmount += details.getAmountPerItem().doubleValue() * details.getQuantity();
-        }
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            double finalTotalAmount = totalAmount;
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(
+                        "INSERT INTO public.\"order\" " +
+                                "(order_id, total_amount, recipient, address_delivery, payment_type, delivery_type) " +
+                                "VALUES (?, ?, ?, ?, ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setLong(1, orderId);
+                ps.setBigDecimal(2, BigDecimal.valueOf(finalTotalAmount));
+                ps.setString(3, createOrderRequest.getRecipient());
+                ps.setString(4, createOrderRequest.getAddressDelivery());
+                ps.setString(5, createOrderRequest.getPaymentType());
+                ps.setString(6, createOrderRequest.getDeliveryType());
+                return ps;
+            }, keyHolder);
 
-        double finalTotalAmount = totalAmount;
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO public.\"order\" " +
-                            "(order_id, total_amount, recipient, address_delivery, payment_type, delivery_type) " +
-                            "VALUES (?, ?, ?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-            ps.setLong(1, orderId);
-            ps.setBigDecimal(2, BigDecimal.valueOf(finalTotalAmount));
-            ps.setString(3, createOrderRequest.getRecipient());
-            ps.setString(4, createOrderRequest.getAddressDelivery());
-            ps.setString(5, createOrderRequest.getPaymentType());
-            ps.setString(6, createOrderRequest.getDeliveryType());
-            return ps;
-        }, keyHolder);
+            for (CreateOrderDetails details : createOrderRequest.getDetails()) {
+                jdbcTemplate.update(
+                        "INSERT INTO public.\"order_detail\" " +
+                                "(article_id, item_name, quantity, amount_per_item, order_id) " +
+                                "VALUES (?, ?, ?, ?, ?)",
+                        details.getArticleId(),
+                        details.getProductName(),
+                        details.getQuantity(),
+                        details.getAmountPerItem(),
+                        keyHolder.getKeyList().getFirst().get("id")
+                );
+            }
 
-        for (CreateOrderDetails details : createOrderRequest.getDetails()) {
-            jdbcTemplate.update(
-                    "INSERT INTO public.\"order_detail\" " +
-                    "(article_id, item_name, quantity, amount_per_item, order_id) " +
-                    "VALUES (?, ?, ?, ?, ?)",
-                    details.getArticleId(),
-                    details.getProductName(),
-                    details.getQuantity(),
-                    details.getAmountPerItem(),
-                    keyHolder.getKeyList().getFirst().get("id")
-            );
+            return true;
+
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -93,6 +105,10 @@ public class OrderService {
     }
 
     public Optional<List<OrderModel>> getFilterOrders(Long minAmount) {
+        if (minAmount < 0) {
+            return Optional.empty();
+        }
+
         String sql = "SELECT * FROM public.\"order\" WHERE total_amount > ?";
 
         List<OrderModel> orders = jdbcTemplate.query(sql, new OrderRowMapper(), minAmount);
@@ -101,6 +117,10 @@ public class OrderService {
     }
 
     public Optional<List<OrderModel>> getFilterOrders(Date actualDay, Long minAmount) {
+        if (minAmount < 0) {
+            return Optional.empty();
+        }
+
         String sql = "SELECT * FROM public.\"order\" WHERE DATE(date_order) = ? AND total_amount > ?";
 
         List<OrderModel> orders = jdbcTemplate.query(sql, new OrderRowMapper(), actualDay, minAmount);
