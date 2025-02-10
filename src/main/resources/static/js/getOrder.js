@@ -10,16 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:9090/orders/get/${orderId}`);
+            const response = await fetch(`/orders/get/${orderId}`);
             if (!response.ok) {
-                throw new Error('Не удалось получить заказ');
+                alert('Не удалось получить заказ');
             }
 
             const data = await response.json();
             const order = data.order;
 
             if (!order) {
-                throw new Error('Заказ не найден');
+                alert('Заказ не найден');
             }
 
             document.getElementById('recipient').textContent = order.recipient;

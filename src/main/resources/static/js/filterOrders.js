@@ -8,14 +8,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const endDate = document.getElementById('endDate').value;
         const disableArticlesInput = document.getElementById('disableArticles').value;
 
-        let url = 'http://localhost:9090/orders/filter/order';
+        let url = '/orders/filter/order';
         let params = {};
 
         if (actualDay || minAmount) {
             if (actualDay) params.actualDay = actualDay;
             if (minAmount) params.minAmount = minAmount;
         } else if (startDate && endDate) {
-            url = 'http://localhost:9090/orders/filter/orderDetails';
+            url = '/orders/filter/orderDetails';
             params.startDate = startDate;
             params.endDate = endDate;
 
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await fetch(url + '?' + new URLSearchParams(params));
             if (!response.ok) {
-                throw new Error('Не удалось получить заказы');
+                alert('Не удалось получить заказы');
             }
 
             const data = await response.json();
