@@ -43,7 +43,7 @@ class OrdersServiceApplicationTests {
     }
 
     @Test
-    void testCreateOrder_Success()s {
+    void testCreateOrder_Success() {
         CreateOrderRequest request = new CreateOrderRequest(
                 new CreateOrderDetails[]{
                         new CreateOrderDetails(1L, "Товар 1", 1, BigDecimal.valueOf(100))
