@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+        <link rel="stylesheet" href="/css/main.css" />
+        <script defer src="/js/getOrder.js"></script>
+        <title>Orders Preview | Получение информации</title>
+    </head>
+    <body>
+        <header class="bg-white">
+            <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+                <div class="flex gap-6 lg:gap-x-12">
+                    <a href="/" class="text-sm/6 font-semibold text-gray-900 text-center lg:text-left">
+                        Создание заказа
+                        <div class="bg-gray-200 w-full h-1 rounded-2xl"></div>
+                    </a>
+                    <a href="/get" class="text-sm/6 font-semibold text-gray-900 text-center lg:text-left">
+                        Получить заказ
+                        <div class="bg-indigo-600 w-full h-1 rounded-2xl"></div>
+                    </a>
+                    <a href="/filter" class="text-sm/6 font-semibold text-gray-900 text-center lg:text-left">Поиск заказа
+                        <div class="bg-gray-200 w-full h-1 rounded-2xl"></div>
+                    </a>
+                </div>
+            </nav>
+        </header>
+        <main class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md mt-8">
+            <h1 class="text-2xl font-bold mb-6">Получение заказа</h1>
+            <form id="getOrderForm" class="space-y-4">
+                <div>
+                    <label for="orderId" class="block text-sm font-medium text-gray-700">ID заказа</label>
+                    <input type="number" id="orderId" name="orderId" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <button type="submit"
+                        class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Получить заказ
+                </button>
+            </form>
+            <div id="orderDetails" class="mt-8 hidden">
+                <h2 class="text-lg font-medium text-gray-900">Информация о заказе</h2>
+                <div class="mt-4 space-y-4">
+                    <div>
+                        <strong>Имя получателя:</strong> <span id="recipient"></span>
+                    </div>
+                    <div>
+                        <strong>Адрес доставки:</strong> <span id="addressDelivery"></span>
+                    </div>
+                    <div>
+                        <strong>Способ оплаты:</strong> <span id="paymentType"></span>
+                    </div>
+                    <div>
+                        <strong>Способ доставки:</strong> <span id="deliveryType"></span>
+                    </div>
+                    <div>
+                        <strong>Детали заказа:</strong>
+                        <ul id="orderItems" class="list-disc ml-6"></ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

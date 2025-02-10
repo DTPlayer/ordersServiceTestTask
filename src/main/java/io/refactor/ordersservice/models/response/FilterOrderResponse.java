@@ -12,10 +12,6 @@ import java.util.List;
 public class FilterOrderResponse extends BaseResponse {
     private List<OrderModel> order;
 
-    public FilterOrderResponse(List<OrderModel> order) {
-        this.order = order;
-    }
-
     public FilterOrderResponse(List<OrderModel> order, String message, Integer status) {
         super(message, status);
         this.order = order;

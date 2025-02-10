@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="/css/main.css" />
+    <script src="/js/index.js"></script>
+    <title>Orders Preview | Создание</title>
+</head>
+    <body>
+        <header class="bg-white">
+            <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+                <div class="flex gap-6 lg:gap-x-12">
+                    <a href="/" class="text-sm/6 font-semibold text-gray-900 text-center lg:text-left">
+                        Создание заказа
+                        <div class="bg-indigo-600 w-full h-1 rounded-2xl"></div>
+                    </a>
+                    <a href="/get" class="text-sm/6 font-semibold text-gray-900 text-center lg:text-left">Получить заказ
+                        <div class="bg-gray-200 w-full h-1 rounded-2xl"></div>
+                    </a>
+                    <a href="/filter" class="text-sm/6 font-semibold text-gray-900 text-center lg:text-left">Поиск заказа
+                        <div class="bg-gray-200 w-full h-1 rounded-2xl"></div>
+                    </a>
+                </div>
+            </nav>
+        </header>
+
+        <main class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md mt-8">
+            <h1 class="text-2xl font-bold mb-6">Создание заказа</h1>
+            <form id="orderForm" class="space-y-4">
+                <div>
+                    <label for="recipient" class="block text-sm font-medium text-gray-700">Имя получателя</label>
+                    <input type="text" id="recipient" name="recipient" required value="Иванов Иван Иванович"
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div>
+                    <label for="addressDelivery" class="block text-sm font-medium text-gray-700">Адрес доставки</label>
+                    <input type="text" id="addressDelivery" name="addressDelivery" required value="ул. Ленина д. 1"
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div>
+                    <label for="paymentType" class="block text-sm font-medium text-gray-700">Способ оплаты</label>
+                    <select id="paymentType" name="paymentType" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="card" selected>Карта</option>
+                        <option value="cash">Наличные</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="deliveryType" class="block text-sm font-medium text-gray-700">Способ доставки</label>
+                    <select id="deliveryType" name="deliveryType" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="pickup">Самовывоз</option>
+                        <option value="delivery" selected>Доставка</option>
+                    </select>
+                </div>
+
+                <div id="orderDetails" class="space-y-4">
+                    <div class="border-t border-gray-200 pt-4">
+                        <h2 class="text-lg font-medium text-gray-900">Детали заказа</h2>
+                        <div class="mt-4 space-y-4">
+                            <div>
+                                <label for="articleId" class="block text-sm font-medium text-gray-700">ID товара</label>
+                                <input type="number" id="articleId" name="details[0].articleId" required value="1"
+                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label for="productName" class="block text-sm font-medium text-gray-700">Название товара</label>
+                                <input type="text" id="productName" name="details[0].productName" required value="Product 1"
+                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label for="quantity" class="block text-sm font-medium text-gray-700">Количество</label>
+                                <input type="number" id="quantity" name="details[0].quantity" required value="1"
+                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label for="amountPerItem" class="block text-sm font-medium text-gray-700">Цена за единицу</label>
+                                <input type="number" step="0.01" id="amountPerItem" name="details[0].amountPerItem" required value="100"
+                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" onclick="addOrderDetail()"
+                        class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    Добавить товар
+                </button>
+
+                <button type="submit"
+                        class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Создать заказ
+                </button>
+            </form>
+        </main>
+
+    </body>
+</html>
