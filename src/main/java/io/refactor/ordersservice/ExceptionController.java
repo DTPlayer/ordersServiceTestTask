@@ -4,7 +4,6 @@ import io.refactor.ordersservice.models.response.ExceptionResponse;
 import io.refactor.ordersservice.models.response.OrderResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
